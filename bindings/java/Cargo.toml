@@ -1,0 +1,114 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+
+[package]
+name = "opendal-java"
+publish = false
+
+authors = ["Apache OpenDAL <dev@opendal.apache.org>"]
+edition = "2024"
+homepage = "https://opendal.apache.org/"
+license = "Apache-2.0"
+repository = "https://github.com/apache/opendal"
+rust-version = "1.85"
+
+[lib]
+crate-type = ["cdylib", "staticlib"]
+doc = false
+
+[dependencies]
+jni = { version = "0.21.1" }
+# opendal-java won't be published to crates.io, we always use the local version
+opendal = { version = ">=0", path = "../../core", default-features = false, features = [
+  "blocking",
+  "reqwest-rustls-tls",
+  "executors-tokio",
+
+  # enabled layers
+  "layers-concurrent-limit",
+  "layers-logging",
+  "layers-retry",
+  "layers-timeout",
+
+  # enabled services
+  "services-azblob",
+  "services-azdls",
+  "services-cos",
+  "services-fs",
+  "services-gcs",
+  "services-ghac",
+  "services-http",
+  "services-ipmfs",
+  "services-memory",
+  "services-obs",
+  "services-oss",
+  "services-s3",
+  "services-tos",
+  "services-webdav",
+  "services-webhdfs",
+  "services-aliyun-drive",
+  "services-cacache",
+  "services-dashmap",
+  "services-dropbox",
+  "services-etcd",
+  # FIXME this requires a preinstalled fdb library
+  # "services-foundationdb",
+  # FIXME requires openssl.
+  # "services-ftp",
+  "services-gdrive",
+  # FIXME how to support HDFS services in bindings?
+  # "services-hdfs",
+  # "services-hdfs-native",
+  "services-hf",
+  "services-ipfs",
+  "services-memcached",
+  "services-mini-moka",
+  "services-moka",
+  "services-onedrive",
+  "services-persy",
+  "services-postgresql",
+  "services-koofr",
+  "services-mysql",
+  "services-redb",
+  "services-redis",
+  # FIXME: rocksdb will lead to "cannot allocate memory in static TLS block" while linking.
+  # "services-rocksdb",
+  "services-sled",
+  "services-tikv",
+  "services-vercel-artifacts",
+  "services-mongodb",
+  "services-gridfs",
+  "services-sqlite",
+  "services-azfile",
+  "services-swift",
+  "services-alluxio",
+  "services-goosefs",
+  "services-b2",
+  "services-seafile",
+  "services-upyun",
+  "services-yandex-disk",
+] }
+tokio = { version = "1.49.0", features = ["full"] }
+
+# This is not optimal. See also the Cargo issue:
+# https://github.com/rust-lang/cargo/issues/1197#issuecomment-1641086954
+[target.'cfg(unix)'.dependencies.opendal]
+features = [
+  # Depend on "openssh" which depends on "tokio-pipe" that is unavailable on Windows.
+  "services-sftp",
+]
+path = "../../core"

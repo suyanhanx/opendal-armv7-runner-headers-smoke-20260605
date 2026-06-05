@@ -1,0 +1,35 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+
+# Includes runtime dependencies from opendal.gemspec
+gemspec
+
+group :development, :test do
+  gem "rake", ">= 13.2"
+  gem "rb_sys", "~> 0.9.128" # for Makefile generation in extconf.rb
+  gem "rake-compiler", "~> 1.2.9" # to build a debug build
+  gem "minitest", "~> 6.0.6" # test library
+  gem "minitest-reporters", "~> 1.7.1" # better test output
+  gem "activesupport", "~> 8.0.5" # testing support
+  gem "standard", "~> 1.54" # linter with pre-specified rules
+  gem "redcarpet", "~> 3.6" # for documentation markdown parsing
+  gem "yard-rustdoc", "~> 0.4.2" # to generate YARD documentation from Ruby and Rust source
+end
