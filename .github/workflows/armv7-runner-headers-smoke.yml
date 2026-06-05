@@ -33,8 +33,22 @@ jobs:
         include:
           - target: armv7l
             manylinux: auto
+            bindgen_extra_clang_args: >-
+              --target=armv7-unknown-linux-gnueabihf
+              --sysroot=/usr/armv7-unknown-linux-gnueabihf/armv7-unknown-linux-gnueabihf/sysroot
+              -isystem
+              /usr/armv7-unknown-linux-gnueabihf/armv7-unknown-linux-gnueabihf/sysroot/usr/include
+              -isystem
+              /usr/include
           - target: armv7-unknown-linux-musleabihf
             manylinux: musllinux_1_1
+            bindgen_extra_clang_args: >-
+              --target=armv7-unknown-linux-musleabihf
+              --sysroot=/usr/local/musl/armv7-unknown-linux-musleabihf
+              -isystem
+              /usr/local/musl/armv7-unknown-linux-musleabihf/include
+              -isystem
+              /usr/include
     steps:
       - uses: actions/checkout@v6
       - name: Assert no local io_uring header override
@@ -45,6 +59,8 @@ jobs:
       - name: Setup Rust toolchain
         uses: ./.github/actions/setup
       - uses: PyO3/maturin-action@v1
+        env:
+          BINDGEN_EXTRA_CLANG_ARGS: ${{ matrix.bindgen_extra_clang_args }}
         with:
           working-directory: bindings/python
           target: ${{ matrix.target }}
