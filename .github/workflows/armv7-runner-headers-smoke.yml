@@ -59,14 +59,14 @@ jobs:
       - name: Setup Rust toolchain
         uses: ./.github/actions/setup
       - uses: PyO3/maturin-action@v1
-        env:
-          BINDGEN_EXTRA_CLANG_ARGS: ${{ matrix.bindgen_extra_clang_args }}
         with:
           working-directory: bindings/python
           target: ${{ matrix.target }}
           command: build
           args: --release -o dist -i python3.11 --features=pyo3/extension-module,services-all,abi3
           manylinux: ${{ matrix.manylinux }}
+          docker-options: >-
+            -e "BINDGEN_EXTRA_CLANG_ARGS=${{ matrix.bindgen_extra_clang_args }}"
       - name: Upload wheel
         uses: actions/upload-artifact@v6
         with:
